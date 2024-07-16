@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css"
+import {BrowserRouter as Router, useRoutes} from "react-router-dom"
+import Login from "./login"
+import Trx from "./Trx"
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
+import {WagmiProvider} from "wagmi"
+import {config} from "./wagmiProvider/config"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const queryClient = new QueryClient()
+
+const AppRoutes = () => {
+  let routes = useRoutes([
+    {path: "/", element: <Login />},
+    {path: "wallet/:id", element: <Trx />},
+    // Add more routes as needed
+  ])
+  return routes
 }
 
-export default App;
+const App = () => {
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </QueryClientProvider>
+    </WagmiProvider>
+  )
+}
+
+export default App
